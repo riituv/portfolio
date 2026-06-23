@@ -1,16 +1,14 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import { Playfair_Display, Geist } from 'next/font/google'
+import '../styles/globals.css'
+import { cn } from '@/lib/utils'
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+const geist = Geist({ subsets: ['latin'], variable: '--font-sans' })
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+const playfair = Playfair_Display({
+  variable: '--font-playfair-display',
+  subsets: ['latin'],
+})
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -25,9 +23,20 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={cn('h-full', 'antialiased', playfair.variable, 'font-sans', geist.variable)}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <div className="flex-grow flex flex-col">{children}</div>
+        {/* Modern Footer */}
+        <footer className="w-full py-8 text-center border-t border-border/60 bg-card/20 backdrop-blur-sm relative z-10 text-muted-foreground text-xs font-medium tracking-wide mt-auto">
+          <div className="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p>© {new Date().getFullYear()} Ritu Vyas. All rights reserved.</p>
+            <p className="flex items-center gap-1.5 justify-center">
+              Built with Next.js & Tailwind CSS
+            </p>
+          </div>
+        </footer>
+      </body>
     </html>
-  );
+  )
 }
