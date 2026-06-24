@@ -2,20 +2,43 @@
 
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Sparkles } from "lucide-react";
+import { Sparkles, Sun, Moon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { aboutData } from "@/data/data";
 
 const navLinks = [
   { label: "About", id: "about" },
   { label: "Skills", id: "skills" },
   { label: "Experience", id: "work-experience" },
   { label: "Projects", id: "projects" },
-  { label: "Contact", id: "contact" },
 ];
 
 export default function Navbar() {
   const [activeSection, setActiveSection] = useState("about");
   const [isScrolled, setIsScrolled] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [theme, setTheme] = useState<"light" | "dark">("dark");
+
+  useEffect(() => {
+    const handle = requestAnimationFrame(() => {
+      setMounted(true);
+      const localTheme = localStorage.getItem("theme") as "light" | "dark" | null;
+      const initialTheme = localTheme === "light" ? "light" : "dark";
+      setTheme(initialTheme);
+    });
+    return () => cancelAnimationFrame(handle);
+  }, []);
+
+  const toggleTheme = () => {
+    const newTheme = theme === "light" ? "dark" : "light";
+    setTheme(newTheme);
+    localStorage.setItem("theme", newTheme);
+    if (newTheme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -86,7 +109,7 @@ export default function Navbar() {
         >
           <Sparkles className="size-4 text-indigo-500 animate-pulse" />
           <span className="bg-gradient-to-r from-indigo-500 to-teal-500 bg-clip-text text-transparent">
-            Ritu Vyas
+            {aboutData.name}
           </span>
         </a>
 
@@ -117,14 +140,31 @@ export default function Navbar() {
           })}
         </div>
 
-        {/* CTA Button */}
-        <a
-          href="#contact"
-          onClick={(e) => handleNavClick(e, "contact")}
-          className="hidden sm:inline-flex items-center justify-center px-4 py-1.5 rounded-full border border-indigo-500/20 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 text-xs font-semibold tracking-wide transition-colors duration-200"
-        >
-          Hire Me
-        </a>
+        {/* Theme Toggle & CTA Button */}
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={toggleTheme}
+            className="inline-flex items-center justify-center p-2 rounded-full border border-border bg-card/40 hover:bg-muted text-muted-foreground hover:text-foreground transition-colors duration-200 cursor-pointer shadow-sm"
+            aria-label="Toggle theme"
+          >
+            {!mounted ? (
+              <div className="size-4" />
+            ) : theme === "dark" ? (
+              <Sun className="size-4 text-amber-500" />
+            ) : (
+              <Moon className="size-4 text-indigo-500" />
+            )}
+          </button>
+
+          <a
+            href="#contact"
+            onClick={(e) => handleNavClick(e, "contact")}
+            className="hidden sm:inline-flex items-center justify-center px-4 py-1.5 rounded-full border border-indigo-500/20 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 text-xs font-semibold tracking-wide transition-colors duration-200"
+          >
+            Hire Me
+          </a>
+        </div>
       </motion.nav>
     </div>
   );

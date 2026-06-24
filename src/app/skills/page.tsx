@@ -1,11 +1,13 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Code2, Terminal, Cpu, Layers, Sparkles } from "lucide-react";
+import * as LucideIcons from "lucide-react";
+import { Sparkles } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { skillsData } from "@/data/data";
 
-const MotionCard = motion(Card);
+const MotionCard = motion.create(Card);
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -31,29 +33,6 @@ const itemVariants = {
   },
 } as const;
 
-const skillCategories = [
-  {
-    title: "Languages",
-    icon: <Code2 className="size-5 text-indigo-500 dark:text-indigo-400" />,
-    skills: ["TypeScript", "JavaScript", "Python", "Go", "HTML5 & CSS3", "SQL"],
-  },
-  {
-    title: "Frontend Development",
-    icon: <Layers className="size-5 text-cyan-500 dark:text-cyan-400" />,
-    skills: ["React 19", "Next.js 16", "Tailwind CSS v4", "Framer Motion", "Redux Toolkit", "Base UI"],
-  },
-  {
-    title: "Backend & Systems",
-    icon: <Cpu className="size-5 text-emerald-500 dark:text-emerald-400" />,
-    skills: ["Node.js", "Express", "Fastify", "PostgreSQL", "MongoDB", "REST APIs", "GraphQL"],
-  },
-  {
-    title: "Tools & DevOps",
-    icon: <Terminal className="size-5 text-amber-500 dark:text-amber-400" />,
-    skills: ["Git & GitHub", "Docker", "AWS", "CI/CD Pipelines", "Vercel", "Figma"],
-  },
-];
-
 export default function Skills() {
   return (
     <section id="skills" className="relative w-full py-20 md:py-28 overflow-hidden bg-background">
@@ -74,48 +53,52 @@ export default function Skills() {
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-border bg-muted/40 backdrop-blur-sm">
               <Sparkles className="size-4 text-amber-500 animate-pulse" />
               <span className="text-xs font-semibold tracking-wider uppercase text-muted-foreground">
-                My Arsenal
+                {skillsData.badge}
               </span>
             </div>
             <h2 className="font-[family-name:var(--font-playfair-display)] font-bold text-4xl md:text-5xl lg:text-6xl text-foreground tracking-tight">
-              Technical Expertise
+              {skillsData.heading}
             </h2>
             <p className="text-muted-foreground max-w-xl mx-auto text-base md:text-lg">
-              Here are the core languages, frameworks, and workflows I use to bring ideas to life.
+              {skillsData.description}
             </p>
           </div>
 
           {/* Grid of Categories */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {skillCategories.map((cat) => (
-              <MotionCard
-                key={cat.title}
-                variants={itemVariants}
-                whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                className="bg-card/30 backdrop-blur-sm hover:border-indigo-500/30 hover:bg-card/50 transition-all duration-300 flex flex-col h-full border-border/80"
-              >
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="p-2 rounded-lg bg-muted border border-border/40">
-                    {cat.icon}
+            {skillsData.categories.map((cat) => {
+              const IconComponent = (LucideIcons as unknown as Record<string, React.ComponentType<{ className?: string }>>)[cat.iconName] || LucideIcons.HelpCircle;
+
+              return (
+                <MotionCard
+                  key={cat.title}
+                  variants={itemVariants}
+                  whileHover={{ y: -4, transition: { duration: 0.2 } }}
+                  className="bg-card/30 backdrop-blur-sm hover:border-indigo-500/30 hover:bg-card/50 transition-colors duration-300 flex flex-col h-full border-border/80 p-6"
+                >
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="p-2 rounded-lg bg-muted border border-border/40">
+                      <IconComponent className={`size-5 ${cat.iconColorClass}`} />
+                    </div>
+                    <h4 className="font-semibold text-foreground text-sm tracking-wide uppercase">
+                      {cat.title}
+                    </h4>
                   </div>
-                  <h4 className="font-semibold text-foreground text-sm tracking-wide uppercase">
-                    {cat.title}
-                  </h4>
-                </div>
-                
-                <div className="flex flex-wrap gap-2 mt-auto">
-                  {cat.skills.map((skill) => (
-                    <Badge
-                      key={skill}
-                      variant="secondary"
-                      className="bg-muted/60 text-muted-foreground border border-border/50 hover:border-indigo-500/20 hover:text-foreground hover:bg-muted transition-colors duration-200 cursor-default"
-                    >
-                      {skill}
-                    </Badge>
-                  ))}
-                </div>
-              </MotionCard>
-            ))}
+                  
+                  <div className="flex flex-wrap gap-2 mt-auto">
+                    {cat.skills.map((skill) => (
+                      <Badge
+                        key={skill}
+                        variant="secondary"
+                        className="bg-muted/60 text-muted-foreground border border-border/50 hover:border-indigo-500/20 hover:text-foreground hover:bg-muted transition-colors duration-200 cursor-default"
+                      >
+                        {skill}
+                      </Badge>
+                    ))}
+                  </div>
+                </MotionCard>
+              );
+            })}
           </div>
         </motion.div>
       </div>

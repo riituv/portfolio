@@ -1,11 +1,12 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Briefcase, Calendar, MapPin, Sparkles, Building2 } from "lucide-react";
+import { Calendar, MapPin, Sparkles, Building2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { experiencesData } from "@/data/data";
 
-const MotionCard = motion(Card);
+const MotionCard = motion.create(Card);
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -36,43 +37,6 @@ const cardVariants = (index: number) => ({
   },
 } as const);
 
-
-const experiences = [
-  {
-    role: "Senior Software Engineer",
-    company: "TechFlow Solutions",
-    location: "San Francisco, CA (Hybrid)",
-    duration: "2024 - Present",
-    description: [
-      "Led the transition of a legacy React dashboard to a modern Next.js App Router setup, improving initial page load speed by 35%.",
-      "Designed and deployed a Redis-backed caching layer for GraphQL query endpoints, reducing API response times by up to 50%.",
-      "Mentored a team of 4 junior developers and established standardized linting, styling guidelines, and Git branch workflows.",
-    ],
-  },
-  {
-    role: "Software Engineer",
-    company: "Innovate Labs",
-    location: "New York, NY (Remote)",
-    duration: "2022 - 2024",
-    description: [
-      "Developed high-volume PostgreSQL database schemas and optimized slow SQL queries, saving over $12k/year in cloud database costs.",
-      "Collaborated closely with UX designers to implement a shared component library built on top of Radix UI and Tailwind CSS.",
-      "Integrated third-party payment processing gateways (Stripe) and implemented robust user subscription workflows.",
-    ],
-  },
-  {
-    role: "Frontend Developer Intern",
-    company: "PixelCraft Media",
-    location: "Boston, MA (On-site)",
-    duration: "2021 - 2022",
-    description: [
-      "Assisted in rebuilding the corporate website using React, contributing to a 20% increase in inbound sales leads.",
-      "Wrote comprehensive unit and integration tests using Jest and React Testing Library, boosting code coverage to 85%.",
-      "Optimized assets, code-splitting modules, and lazy-loading components to bring Lighthouse performance scores from 70 to 95+.",
-    ],
-  },
-];
-
 export default function WorkExperience() {
   return (
     <section id="work-experience" className="relative w-full py-20 md:py-28 overflow-hidden bg-background">
@@ -93,14 +57,14 @@ export default function WorkExperience() {
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-border bg-muted/40 backdrop-blur-sm">
               <Sparkles className="size-4 text-amber-500 animate-pulse" />
               <span className="text-xs font-semibold tracking-wider uppercase text-muted-foreground">
-                My Journey
+                {experiencesData.badge}
               </span>
             </div>
             <h2 className="font-[family-name:var(--font-playfair-display)] font-bold text-4xl md:text-5xl lg:text-6xl text-foreground tracking-tight">
-              Work Experience
+              {experiencesData.heading}
             </h2>
             <p className="text-muted-foreground max-w-xl mx-auto text-base md:text-lg">
-              A timeline of my professional career, technical growth, and contributions in software engineering.
+              {experiencesData.description}
             </p>
           </div>
 
@@ -112,7 +76,7 @@ export default function WorkExperience() {
 
             {/* Experiences list */}
             <div className="space-y-12 lg:space-y-8">
-              {experiences.map((exp, idx) => {
+              {experiencesData.experiences.map((exp, idx) => {
                 const isLeft = idx % 2 === 0;
 
                 return (
@@ -132,7 +96,7 @@ export default function WorkExperience() {
                           variants={cardVariants(idx)}
                           viewport={{ once: true }}
                           whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                          className="w-full p-6 rounded-2xl border-border bg-card/40 hover:border-indigo-500/30 hover:bg-card/60 backdrop-blur-md shadow-xl transition-all duration-300 text-left lg:text-right"
+                          className="w-full p-6 rounded-2xl border-border bg-card/40 hover:border-indigo-500/30 hover:bg-card/60 backdrop-blur-md shadow-xl transition-colors duration-300 text-left lg:text-right"
                         >
                           <Badge
                             variant="secondary"
@@ -161,8 +125,8 @@ export default function WorkExperience() {
                           <ul className="space-y-2 text-muted-foreground text-sm lg:text-right leading-relaxed list-none">
                             {exp.description.map((bullet, bulletIdx) => (
                               <li key={bulletIdx} className="flex gap-2 items-start lg:justify-end">
-                                <span className="order-2 lg:order-1 lg:ml-2 text-indigo-500 dark:text-indigo-400 font-bold select-none">•</span>
-                                <span className="order-1 lg:order-2">{bullet}</span>
+                                <span className="order-1 lg:order-2 text-indigo-500 dark:text-indigo-400 font-bold select-none">•</span>
+                                <span className="order-2 lg:order-1">{bullet}</span>
                               </li>
                             ))}
                           </ul>
@@ -180,7 +144,7 @@ export default function WorkExperience() {
                           variants={cardVariants(idx)}
                           viewport={{ once: true }}
                           whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                          className="w-full p-6 rounded-2xl border-border bg-card/40 hover:border-teal-500/30 hover:bg-card/60 backdrop-blur-md shadow-xl transition-all duration-300 text-left"
+                          className="w-full p-6 rounded-2xl border-border bg-card/40 hover:border-teal-500/30 hover:bg-card/60 backdrop-blur-md shadow-xl transition-colors duration-300 text-left"
                         >
                           <Badge
                             variant="secondary"

@@ -2,20 +2,16 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
-import {
-  Sparkles,
-  ArrowRight,
-  ExternalLink
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Sparkles, Download } from 'lucide-react'
+import { aboutData } from '@/data/data'
 
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.12,
-      delayChildren: 0.1,
+      staggerChildren: 0.5,
+      delayChildren: 0.5,
     },
   },
 } as const;
@@ -36,7 +32,7 @@ const itemVariants = {
 export default function About() {
   return (
     <section id="about" className="relative w-full py-20 md:py-28 overflow-hidden bg-background">
-      {/* Decorative ambient background glows */}
+      {/* Decorative ambient background glows on left and right*/}
       <div className="absolute top-1/4 left-0 -translate-x-1/2 w-96 h-96 rounded-full bg-indigo-500/10 dark:bg-indigo-500/5 blur-3xl pointer-events-none" />
       <div className="absolute bottom-1/4 right-0 translate-x-1/2 w-96 h-96 rounded-full bg-teal-500/10 dark:bg-teal-500/5 blur-3xl pointer-events-none" />
 
@@ -45,7 +41,7 @@ export default function About() {
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={{ once: true, margin: '-100px' }}
           className="space-y-20"
         >
           {/* Main Grid: Info and Photo */}
@@ -55,40 +51,40 @@ export default function About() {
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-border bg-muted/40 backdrop-blur-sm">
                 <Sparkles className="size-4 text-amber-500 animate-pulse" />
                 <span className="text-xs font-semibold tracking-wider uppercase text-muted-foreground">
-                  About Me
+                  {aboutData.badge}
                 </span>
               </div>
 
               <h2 className="font-[family-name:var(--font-playfair-display)] font-bold text-4xl md:text-5xl lg:text-6xl text-foreground leading-tight tracking-tight">
-                Crafting digital experiences with <span className="bg-gradient-to-r from-indigo-500 via-purple-500 to-teal-500 bg-clip-text text-transparent">code & care</span>.
+                {aboutData.headingStart}
+                <span className="bg-gradient-to-r from-indigo-500 via-purple-500 to-teal-500 bg-clip-text text-transparent">
+                  {aboutData.headingHighlight}
+                </span>
+                {aboutData.headingEnd}
               </h2>
 
-              <p className="text-lg text-primary/80 font-medium">
-                Hello there! I&apos;m Ritu Vyas, a Software Engineer.
-              </p>
+              <p className="text-lg text-primary/80 font-medium">{aboutData.title}</p>
 
               <div className="space-y-4 text-muted-foreground leading-relaxed text-base md:text-lg">
-                <p>
-                  I specialize in designing and engineering high-performance web applications that merge robust backends with pixel-perfect, highly responsive user experiences. My development philosophy values clean architecture, performance optimization, and accessible design systems.
-                </p>
-                <p>
-                  I enjoy solving complex programmatic problems and translating them into simple, intuitive user interfaces. I look at coding as a craft, where the quality of the codebase under the hood is just as critical as the polish on the final visual layer.
-                </p>
-                <p>
-                  When I&apos;m not building, you can find me experimenting with new frameworks (like Tailwind v4 and React 19), reading tech blogs, contributing to open source, or refining UI micro-interactions.
-                </p>
+                {aboutData.description.map((paragraph, index) => (
+                  <p key={index}>{paragraph}</p>
+                ))}
               </div>
 
               {/* Action Buttons and Socials */}
               <div className="pt-4 flex flex-wrap items-center gap-4 md:gap-6">
-                <Button size="lg" className="rounded-full shadow-lg hover:shadow-indigo-500/10 transition-all duration-300 gap-2 cursor-pointer">
-                  <span>Get In Touch</span>
-                  <ArrowRight className="size-4 group-hover/button:translate-x-1 transition-transform" />
-                </Button>
-                
+                <a
+                  href={aboutData.resumeUrl}
+                  download
+                  className="inline-flex items-center justify-center px-6 py-3 rounded-full border border-indigo-500/20 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 text-sm font-semibold tracking-wide transition-all duration-300 gap-2 cursor-pointer shadow-lg hover:shadow-indigo-500/10"
+                >
+                  <span>Resume</span>
+                  <Download className="size-4" />
+                </a>
+
                 <div className="flex items-center gap-3">
                   <a
-                    href="https://github.com"
+                    href={aboutData.socials.github}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-2.5 rounded-full border border-border bg-card hover:bg-muted text-muted-foreground hover:text-foreground transition-colors duration-300"
@@ -111,7 +107,7 @@ export default function About() {
                     </svg>
                   </a>
                   <a
-                    href="https://linkedin.com"
+                    href={aboutData.socials.linkedin}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-2.5 rounded-full border border-border bg-card hover:bg-muted text-muted-foreground hover:text-foreground transition-colors duration-300"
@@ -134,28 +130,6 @@ export default function About() {
                       <circle cx="4" cy="4" r="2" />
                     </svg>
                   </a>
-                  <a
-                    href="https://twitter.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-2.5 rounded-full border border-border bg-card hover:bg-muted text-muted-foreground hover:text-foreground transition-colors duration-300"
-                    aria-label="Twitter Profile"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="size-5"
-                    >
-                      <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z" />
-                    </svg>
-                  </a>
                 </div>
               </div>
             </motion.div>
@@ -168,12 +142,12 @@ export default function About() {
               <div className="relative group w-full max-w-[400px] aspect-square">
                 {/* Decorative glowing gradient card behind the avatar */}
                 <div className="absolute -inset-1 rounded-2xl bg-gradient-to-tr from-indigo-500 via-purple-500 to-teal-500 opacity-30 blur-xl group-hover:opacity-45 transition duration-500" />
-                
+
                 {/* The main container */}
                 <div className="relative w-full h-full rounded-2xl overflow-hidden border border-border bg-card/40 p-3 backdrop-blur-md shadow-2xl flex items-center justify-center">
                   <div className="relative w-full h-full rounded-xl overflow-hidden bg-muted/30">
                     <Image
-                      src="/developer_avatar.png"
+                      src={aboutData.avatarUrl}
                       alt="Ritu Vyas - Tech Developer Avatar"
                       fill
                       sizes="(max-w-7xl) 100vw, 400px"
@@ -185,10 +159,8 @@ export default function About() {
               </div>
             </motion.div>
           </div>
-
-
         </motion.div>
       </div>
     </section>
-  );
+  )
 }

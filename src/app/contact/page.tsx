@@ -15,6 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { contactData } from "@/data/data";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -55,6 +56,7 @@ export default function Contact() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submissionError, setSubmissionError] = useState("");
 
   const validate = () => {
     const newErrors = { name: "", email: "", message: "" };
@@ -93,23 +95,42 @@ export default function Contact() {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
 
     setIsSubmitting(true);
+    setSubmissionError("");
 
-    // Simulate database/API submission delay
-    setTimeout(() => {
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setIsSubmitted(true);
+      } else {
+        setSubmissionError(data.error || "Failed to send message. Please try again.");
+      }
+    } catch (err) {
+      console.error("Submission error:", err);
+      setSubmissionError("Network error. Please check your connection and try again.");
+    } finally {
       setIsSubmitting(false);
-      setIsSubmitted(true);
-    }, 1800);
+    }
   };
 
   const handleReset = () => {
     setFormData({ name: "", email: "", message: "" });
     setErrors({ name: "", email: "", message: "" });
     setIsSubmitted(false);
+    setSubmissionError("");
   };
 
   return (
@@ -131,32 +152,32 @@ export default function Contact() {
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-border bg-muted/40 backdrop-blur-sm">
               <Sparkles className="size-4 text-amber-500 animate-pulse" />
               <span className="text-xs font-semibold tracking-wider uppercase text-muted-foreground">
-                Get In Touch
+                {contactData.badge}
               </span>
             </div>
             <h2 className="font-[family-name:var(--font-playfair-display)] font-bold text-4xl md:text-5xl lg:text-6xl text-foreground tracking-tight">
-              Let&apos;s Collaborate
+              {contactData.heading}
             </h2>
             <p className="text-muted-foreground max-w-xl mx-auto text-base md:text-lg">
-              Have a question, feedback, or a project in mind? Drop me a line and let&apos;s start building.
+              {contactData.description}
             </p>
           </div>
 
           {/* Contact Layout Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 lg:items-stretch items-start">
             {/* Left: Contact Info Info-blocks */}
-            <motion.div variants={itemVariants} className="lg:col-span-5 space-y-8">
+            <motion.div variants={itemVariants} className="lg:col-span-5 flex flex-col justify-between h-full gap-8">
               <div className="space-y-4">
                 <h3 className="font-[family-name:var(--font-playfair-display)] font-bold text-2xl md:text-3xl text-foreground">
-                  Contact Information
+                  {contactData.infoTitle}
                 </h3>
                 <p className="text-muted-foreground text-sm md:text-base leading-relaxed">
-                  I&apos;m currently open to full-time opportunities, freelance partnerships, and open-source collaborations. Don&apos;t hesitate to reach out!
+                  {contactData.infoDescription}
                 </p>
               </div>
 
               {/* Info Blocks */}
-              <div className="space-y-4">
+              <div className="flex flex-col justify-between gap-4 flex-grow">
                 {/* Email card */}
                 <div className="p-5 rounded-2xl border border-border bg-card/30 backdrop-blur-sm flex items-start gap-4 hover:border-indigo-500/20 hover:bg-card/50 transition-all duration-300">
                   <div className="p-3 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-500">
@@ -167,10 +188,10 @@ export default function Contact() {
                       Email Me Directly
                     </h4>
                     <a
-                      href="mailto:ritu.vyas@example.com"
+                      href={`mailto:${contactData.details.email}`}
                       className="text-foreground font-semibold hover:text-indigo-500 transition-colors duration-200 block mt-1"
                     >
-                      ritu.vyas@example.com
+                      {contactData.details.email}
                     </a>
                   </div>
                 </div>
@@ -185,31 +206,33 @@ export default function Contact() {
                       Location
                     </h4>
                     <p className="text-foreground font-semibold mt-1">
-                      India (Available for Remote / Hybrid Work)
+                      {contactData.details.location}
                     </p>
                   </div>
                 </div>
 
                 {/* Response time card */}
-                <div className="p-5 rounded-2xl border border-border bg-card/30 backdrop-blur-sm flex items-start gap-4 hover:border-indigo-500/20 hover:bg-card/50 transition-all duration-300">
-                  <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-500">
-                    <Clock className="size-6" />
+                {contactData.details.responseTime && (
+                  <div className="p-5 rounded-2xl border border-border bg-card/30 backdrop-blur-sm flex items-start gap-4 hover:border-indigo-500/20 hover:bg-card/50 transition-all duration-300">
+                    <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-500">
+                      <Clock className="size-6" />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-foreground text-sm uppercase tracking-wider text-muted-foreground">
+                        Response Time
+                      </h4>
+                      <p className="text-foreground font-semibold mt-1">
+                        {contactData.details.responseTime}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="font-semibold text-foreground text-sm uppercase tracking-wider text-muted-foreground">
-                      Response Time
-                    </h4>
-                    <p className="text-foreground font-semibold mt-1">
-                      Usually within 24 hours
-                    </p>
-                  </div>
-                </div>
+                )}
               </div>
             </motion.div>
 
             {/* Right: The Glassmorphic Contact Form */}
-            <motion.div variants={itemVariants} className="lg:col-span-7">
-              <div className="relative p-6 md:p-8 rounded-2xl border border-border bg-card/40 backdrop-blur-md shadow-2xl overflow-hidden">
+            <motion.div variants={itemVariants} className="lg:col-span-7 h-full">
+              <div className="relative p-6 md:p-8 rounded-2xl border border-border bg-card/40 backdrop-blur-md shadow-2xl overflow-hidden h-full flex flex-col">
                 {/* Decorative border glows */}
                 <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-48 h-48 rounded-full bg-indigo-500/10 blur-2xl pointer-events-none" />
 
@@ -221,7 +244,7 @@ export default function Contact() {
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
                       onSubmit={handleSubmit}
-                      className="space-y-6 relative z-10"
+                      className="space-y-6 relative z-10 flex-grow flex flex-col h-full"
                       noValidate
                     >
                       {/* Name input */}
@@ -264,7 +287,7 @@ export default function Contact() {
                           name="email"
                           value={formData.email}
                           onChange={handleInputChange}
-                          placeholder="ritu.vyas@example.com"
+                          placeholder={contactData.details.email}
                           aria-invalid={!!errors.email}
                           className="h-11 px-4 py-3 rounded-xl bg-background/50"
                         />
@@ -277,7 +300,7 @@ export default function Contact() {
                       </div>
 
                       {/* Message Input */}
-                      <div className="space-y-2">
+                      <div className="space-y-2 flex-grow flex flex-col">
                         <label
                           htmlFor="message"
                           className="block text-sm font-semibold text-foreground"
@@ -292,7 +315,7 @@ export default function Contact() {
                           placeholder="Tell me about your project, role opportunities, or just say hi..."
                           aria-invalid={!!errors.message}
                           rows={5}
-                          className="px-4 py-3 rounded-xl bg-background/50 resize-none"
+                          className="px-4 py-3 rounded-xl bg-background/50 resize-none flex-grow"
                         />
                         {errors.message && (
                           <div className="flex items-center gap-1.5 text-xs text-destructive mt-1.5 font-medium animate-fadeIn">
@@ -302,12 +325,19 @@ export default function Contact() {
                         )}
                       </div>
 
+                      {submissionError && (
+                        <div className="flex items-center gap-1.5 text-xs text-destructive font-medium animate-fadeIn mb-2">
+                          <AlertCircle className="size-3.5" />
+                          <span>{submissionError}</span>
+                        </div>
+                      )}
+
                       {/* Submit Button */}
                       <Button
                         type="submit"
                         size="lg"
                         disabled={isSubmitting}
-                        className="w-full rounded-xl shadow-lg hover:shadow-indigo-500/10 transition-all duration-300 gap-2 cursor-pointer relative h-11"
+                        className="w-full rounded-xl shadow-lg bg-indigo-600 hover:bg-indigo-700 text-white dark:bg-indigo-500 dark:hover:bg-indigo-600 transition-all duration-300 gap-2 cursor-pointer relative h-11 border-none shadow-indigo-500/20 hover:shadow-indigo-500/35"
                       >
                         {isSubmitting ? (
                           <div className="flex items-center gap-2">
@@ -330,7 +360,7 @@ export default function Contact() {
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.95 }}
                       transition={{ type: "spring", stiffness: 80, damping: 14 }}
-                      className="text-center py-10 space-y-6 relative z-10 flex flex-col items-center justify-center"
+                      className="text-center py-10 space-y-6 relative z-10 flex-grow flex flex-col items-center justify-center h-full"
                     >
                       <div className="p-4 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 animate-bounce">
                         <CheckCircle className="size-12" />

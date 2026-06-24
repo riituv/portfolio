@@ -2,11 +2,13 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, ExternalLink, Code2, Globe } from "lucide-react";
+import { Sparkles, ExternalLink } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { projectsData } from "@/data/data";
+import { cn } from "@/lib/utils";
 
-const MotionCard = motion(Card);
+const MotionCard = motion.create(Card);
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -33,47 +35,10 @@ const cardVariants = {
   },
 } as const;
 
-const projectsData = [
-  {
-    title: "OmniSearch Engine",
-    category: "AI/ML",
-    description: "An intelligent semantic search engine utilizing hybrid sparse-dense vector retrieval. Connects seamlessly with multiple cloud document repositories, generates embeddings on upload, and delivers real-time semantic query matching in milliseconds.",
-    tags: ["Next.js", "FastAPI", "Pinecone", "OpenAI", "Tailwind CSS", "Docker"],
-    githubUrl: "https://github.com",
-    liveUrl: "https://demo.com",
-  },
-  {
-    title: "Taskify Dashboard",
-    category: "Frontend",
-    description: "A collaborative Kanban-style team management application featuring multi-user workspaces, smooth drag-and-drop workspace columns, real-time WebSocket syncing, and comprehensive project activity dashboards.",
-    tags: ["React 19", "TypeScript", "Framer Motion", "Node.js", "Socket.io", "PostgreSQL"],
-    githubUrl: "https://github.com",
-    liveUrl: "https://demo.com",
-  },
-  {
-    title: "Aura UI Library",
-    category: "Frontend",
-    description: "A headless, minimalist React UI component library strictly compliant with WCAG accessibility guidelines. Provides seamless theme customization capabilities, screen-reader optimizations, and keyboard navigation support.",
-    tags: ["React", "TypeScript", "Tailwind CSS", "Radix UI", "Vite", "Storybook"],
-    githubUrl: "https://github.com",
-    liveUrl: "https://demo.com",
-  },
-  {
-    title: "LogiRoute Engine",
-    category: "Backend",
-    description: "A high-efficiency route optimization service designed for urban logistics. Resolves complex vehicle routing problems with tight time window constraints using custom heuristics, returning optimal coordinate paths.",
-    tags: ["Python", "Go", "PostgreSQL", "Google OR-Tools", "Redis", "Fastify"],
-    githubUrl: "https://github.com",
-    liveUrl: "https://demo.com",
-  },
-];
-
-const categories = ["All", "Frontend", "Backend", "AI/ML"];
-
 export default function Projects() {
   const [activeFilter, setActiveFilter] = useState("All");
 
-  const filteredProjects = projectsData.filter((project) => {
+  const filteredProjects = projectsData.projects.filter((project) => {
     if (activeFilter === "All") return true;
     return project.category === activeFilter;
   });
@@ -97,21 +62,21 @@ export default function Projects() {
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-border bg-muted/40 backdrop-blur-sm">
               <Sparkles className="size-4 text-amber-500 animate-pulse" />
               <span className="text-xs font-semibold tracking-wider uppercase text-muted-foreground">
-                My Creations
+                {projectsData.badge}
               </span>
             </div>
             <h2 className="font-[family-name:var(--font-playfair-display)] font-bold text-4xl md:text-5xl lg:text-6xl text-foreground tracking-tight">
-              Featured Projects
+              {projectsData.heading}
             </h2>
             <p className="text-muted-foreground max-w-xl mx-auto text-base md:text-lg">
-              A detailed catalog of full-stack engineering, interactive frontend applications, and machine learning utilities.
+              {projectsData.description}
             </p>
           </div>
 
           {/* Filtering Chips Row */}
           <div className="flex justify-center items-center">
             <div className="flex flex-wrap gap-2 p-1.5 rounded-full border border-border bg-card/40 backdrop-blur-md shadow-md">
-              {categories.map((cat) => {
+              {projectsData.categories.map((cat) => {
                 const isActive = activeFilter === cat;
 
                 return (
@@ -142,7 +107,7 @@ export default function Projects() {
             className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12"
           >
             <AnimatePresence mode="popLayout">
-              {filteredProjects.map((project, idx) => (
+              {filteredProjects.map((project) => (
                 <MotionCard
                   key={project.title}
                   layout
@@ -152,31 +117,47 @@ export default function Projects() {
                   exit="hidden"
                   whileHover={{ y: -4, transition: { duration: 0.2 } }}
                   viewport={{ once: true }}
-                  className="flex flex-col p-6 md:p-8 rounded-2xl border-border bg-card/40 hover:border-indigo-500/30 hover:bg-card/60 backdrop-blur-md shadow-xl transition-all duration-300 h-full justify-between"
+                  className="flex flex-col p-6 md:p-8 rounded-2xl border-border bg-card/40 hover:border-indigo-500/30 hover:bg-card/60 backdrop-blur-md shadow-xl transition-colors duration-300 h-full justify-between"
                 >
                   <div className="space-y-4">
                     {/* Top Row: Category tag and Action Links */}
                     <div className="flex justify-between items-center">
-                      <Badge
-                        variant="secondary"
-                        className={`text-[10px] font-bold tracking-wider uppercase px-2.5 py-0.5 rounded-full border ${
-                          project.category === "AI/ML"
-                            ? "bg-purple-500/10 text-purple-500 border-purple-500/20"
-                            : project.category === "Frontend"
-                            ? "bg-cyan-500/10 text-cyan-500 border-cyan-500/20"
-                            : "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
-                        }`}
-                      >
-                        {project.category}
-                      </Badge>
+                      <div className="flex items-center gap-2">
+                        <Badge
+                          variant="secondary"
+                          className={`text-[10px] font-bold tracking-wider uppercase px-2.5 py-0.5 rounded-full border ${
+                            project.category === "AI/ML"
+                              ? "bg-purple-500/10 text-purple-500 border-purple-500/20"
+                              : project.category === "Frontend"
+                              ? "bg-cyan-500/10 text-cyan-500 border-cyan-500/20"
+                              : "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
+                          }`}
+                        >
+                          {project.category}
+                        </Badge>
+                        {project.isClientProject && (
+                          <Badge
+                            variant="outline"
+                            className="text-[10px] font-bold tracking-wider uppercase px-2.5 py-0.5 rounded-full border bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20"
+                          >
+                            Client Project
+                          </Badge>
+                        )}
+                      </div>
                       
                       <div className="flex items-center gap-3">
                         <a
-                          href={project.githubUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-muted-foreground hover:text-foreground transition-colors duration-200"
-                          aria-label={`View ${project.title} code source on GitHub`}
+                          href={project.githubUrl || undefined}
+                          target={project.githubUrl ? "_blank" : undefined}
+                          rel={project.githubUrl ? "noopener noreferrer" : undefined}
+                          onClick={(e) => !project.githubUrl && e.preventDefault()}
+                          className={cn(
+                            "transition-colors duration-200",
+                            project.githubUrl
+                              ? "text-muted-foreground hover:text-foreground cursor-pointer"
+                              : "text-muted-foreground/30 cursor-not-allowed pointer-events-none"
+                          )}
+                          aria-label={project.githubUrl ? `View ${project.title} code source on GitHub` : "GitHub repository not available"}
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -195,11 +176,17 @@ export default function Projects() {
                           </svg>
                         </a>
                         <a
-                          href={project.liveUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-muted-foreground hover:text-foreground transition-colors duration-200"
-                          aria-label={`View ${project.title} live demo`}
+                          href={project.liveUrl || undefined}
+                          target={project.liveUrl ? "_blank" : undefined}
+                          rel={project.liveUrl ? "noopener noreferrer" : undefined}
+                          onClick={(e) => !project.liveUrl && e.preventDefault()}
+                          className={cn(
+                            "transition-colors duration-200",
+                            project.liveUrl
+                              ? "text-muted-foreground hover:text-foreground cursor-pointer"
+                              : "text-muted-foreground/30 cursor-not-allowed pointer-events-none"
+                          )}
+                          aria-label={project.liveUrl ? `View ${project.title} live demo` : "Live demo not available"}
                         >
                           <ExternalLink className="size-5" />
                         </a>
