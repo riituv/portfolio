@@ -24,6 +24,7 @@ export default function RootLayout({
     <html
       lang="en"
       className={cn('h-full', 'antialiased', playfair.variable, 'font-sans', geist.variable)}
+      suppressHydrationWarning
     >
       <head>
         <script
@@ -48,7 +49,7 @@ export default function RootLayout({
         {/* Modern Footer */}
         <footer className="w-full py-8 text-center border-t border-border/60 bg-card/20 backdrop-blur-sm relative z-10 text-muted-foreground text-xs font-medium tracking-wide mt-auto">
           <div className="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p>© {new Date().getFullYear()} Ritu Vyas. All rights reserved.</p>
+            <p suppressHydrationWarning>© {new Date().getFullYear()} Ritu Vyas. All rights reserved.</p>
             <p className="flex items-center gap-1.5 justify-center">
               Built with Next.js & Tailwind CSS
             </p>
