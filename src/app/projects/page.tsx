@@ -74,8 +74,8 @@ export default function Projects() {
           </div>
 
           {/* Filtering Chips Row */}
-          <div className="flex justify-center items-center">
-            <div className="flex flex-wrap gap-2 p-1.5 rounded-full border border-border bg-card/40 backdrop-blur-md shadow-md">
+          <div className="flex justify-center items-center w-full max-w-full overflow-hidden">
+            <div className="flex flex-nowrap gap-1.5 sm:gap-2 p-1.5 rounded-full border border-border bg-card/40 backdrop-blur-md shadow-md overflow-x-auto max-w-full scrollbar-none">
               {projectsData.categories.map((cat) => {
                 const isActive = activeFilter === cat;
 
@@ -83,7 +83,7 @@ export default function Projects() {
                   <button
                     key={cat}
                     onClick={() => setActiveFilter(cat)}
-                    className="relative px-5 py-2 text-sm font-semibold tracking-wide rounded-full select-none cursor-pointer text-muted-foreground hover:text-foreground transition-colors duration-200"
+                    className="relative px-4 py-1.5 sm:px-5 sm:py-2 text-xs sm:text-sm font-semibold tracking-wide rounded-full select-none cursor-pointer text-muted-foreground hover:text-foreground transition-colors duration-200 shrink-0"
                   >
                     {isActive && (
                       <motion.div

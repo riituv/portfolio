@@ -105,16 +105,16 @@ export default function Navbar() {
         <a
           href="#about"
           onClick={(e) => handleNavClick(e, "about")}
-          className="flex items-center gap-1.5 font-[family-name:var(--font-playfair-display)] font-bold text-base md:text-lg tracking-tight hover:opacity-85 transition-opacity"
+          className="flex items-center gap-1 sm:gap-1.5 font-[family-name:var(--font-playfair-display)] font-bold text-sm sm:text-base md:text-lg tracking-tight hover:opacity-85 transition-opacity shrink-0"
         >
-          <Sparkles className="size-4 text-indigo-500 animate-pulse" />
+          <Sparkles className="size-3.5 sm:size-4 text-indigo-500 animate-pulse" />
           <span className="bg-gradient-to-r from-indigo-500 to-teal-500 bg-clip-text text-transparent">
             {aboutData.name}
           </span>
         </a>
 
         {/* Navigation links */}
-        <div className="flex items-center gap-1 md:gap-2">
+        <div className="flex items-center gap-0.5 sm:gap-2 overflow-x-auto scrollbar-none flex-nowrap max-w-[48%] xs:max-w-[55%] sm:max-w-none">
           {navLinks.map((link) => {
             const isActive = activeSection === link.id;
 
@@ -123,7 +123,7 @@ export default function Navbar() {
                 key={link.id}
                 href={`#${link.id}`}
                 onClick={(e) => handleNavClick(e, link.id)}
-                className="relative px-3 py-1.5 text-xs md:text-sm font-semibold tracking-wide text-muted-foreground hover:text-foreground transition-colors duration-200"
+                className="relative px-2 py-1 sm:px-3 sm:py-1.5 text-[11px] sm:text-xs md:text-sm font-semibold tracking-wide text-muted-foreground hover:text-foreground transition-colors duration-200 shrink-0"
               >
                 {isActive && (
                   <motion.div
