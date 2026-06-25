@@ -1,8 +1,8 @@
-# 🌐 Ritu Vyas Portfolio
+## 🌐 Portfolio
 
 A modern and responsive portfolio website showcasing my projects, technical skills, work experience, and achievements as a Software Engineer.
 
-## 🚀 Live Demo
+![Portfolio Preview](./public/portfolio-preview.gif)
 
 🔗 [Ritu Vyas | Full Stack Engineer](https://portfolio-seven-rho-64.vercel.app/)
 
@@ -29,11 +29,6 @@ A modern and responsive portfolio website showcasing my projects, technical skil
 * Lucide React
 * Resend
 
----
-
-## 📸 Preview
-
-![Portfolio Preview](./public/portfolio-preview.gif)
 
 ---
 
