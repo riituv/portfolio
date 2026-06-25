@@ -33,7 +33,7 @@ A modern and responsive portfolio website showcasing my projects, technical skil
 
 ## 📸 Preview
 
-![Portfolio Preview](./public/Portfoliopreview.mp4)
+![Portfolio Preview](./public/portfolio-preview.gif)
 
 ---
 
