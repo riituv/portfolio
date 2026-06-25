@@ -21,16 +21,42 @@ const containerVariants = {
   },
 } as const;
 
-const cardVariants = {
-  hidden: { opacity: 0, y: 30, scale: 0.95 },
+const leftCardVariants = {
+  hidden: {
+    opacity: 0,
+    x: 80,
+    y: 0,
+    scale: 0.95,
+  },
   visible: {
     opacity: 1,
+    x: 0,
     y: 0,
     scale: 1,
     transition: {
       type: "spring",
-      stiffness: 70,
-      damping: 14,
+      stiffness: 60,
+      damping: 15,
+    },
+  },
+} as const;
+
+const rightCardVariants = {
+  hidden: {
+    opacity: 0,
+    x: -80,
+    y: 0,
+    scale: 0.95,
+  },
+  visible: {
+    opacity: 1,
+    x: 0,
+    y: 0,
+    scale: 1,
+    transition: {
+      type: "spring",
+      stiffness: 60,
+      damping: 15,
     },
   },
 } as const;
@@ -107,18 +133,20 @@ export default function Projects() {
             className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12"
           >
             <AnimatePresence mode="popLayout">
-              {filteredProjects.map((project) => (
-                <MotionCard
-                  key={project.title}
-                  layout
-                  variants={cardVariants}
-                  initial="hidden"
-                  animate="visible"
-                  exit="hidden"
-                  whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                  viewport={{ once: true }}
-                  className="flex flex-col p-6 md:p-8 rounded-2xl border-border bg-card/40 hover:border-indigo-500/30 hover:bg-card/60 backdrop-blur-md shadow-xl transition-colors duration-300 h-full justify-between"
-                >
+              {filteredProjects.map((project, idx) => {
+                const isLeft = idx % 2 === 0;
+                return (
+                  <MotionCard
+                    key={project.title}
+                    layout
+                    variants={isLeft ? leftCardVariants : rightCardVariants}
+                    initial="hidden"
+                    whileInView="visible"
+                    exit="hidden"
+                    whileHover={{ y: -4, transition: { duration: 0.2 } }}
+                    viewport={{ once: true, margin: "-100px" }}
+                    className="flex flex-col p-6 md:p-8 rounded-2xl border-border bg-card/40 hover:border-indigo-500/30 hover:bg-card/60 backdrop-blur-md shadow-xl transition-colors duration-300 h-full justify-between"
+                  >
                   <div className="space-y-4">
                     {/* Top Row: Category tag and Action Links */}
                     <div className="flex justify-between items-center">
@@ -217,9 +245,10 @@ export default function Projects() {
                     ))}
                   </div>
                 </MotionCard>
-              ))}
-            </AnimatePresence>
-          </motion.div>
+              );
+            })}
+          </AnimatePresence>
+        </motion.div>
         </motion.div>
       </div>
     </section>

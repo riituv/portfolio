@@ -65,7 +65,7 @@ export interface ProjectsData {
 export interface ContactDetails {
   email: string;
   location: string;
-  responseTime?: string;
+  linkedin?: string;
 }
 
 export interface ContactData {
@@ -116,7 +116,7 @@ export const skillsData: SkillsData = {
       title: "Backend & Systems",
       iconName: "Cpu",
       iconColorClass: "text-emerald-500 dark:text-emerald-400",
-      skills: ["NodeJS", "ExpressJS", "MongoDB", "Firebase", "PostgreSQL"],
+      skills: ["NodeJS", "ExpressJS", "MongoDB", "PostgreSQL"],
     },
     {
       title: "Tools & DevOps",
@@ -213,7 +213,7 @@ export const contactData: ContactData = {
   infoDescription: "I'm currently open to full-time opportunities, freelance partnerships, and collaborations. Don't hesitate to reach out!",
   details: {
     email: "rituvyas141@gmail.com",
-    location: "Vadodara, Gujarat, India",
-    responseTime: "Usually within 24 hours"
+    location: "India",
+    linkedin: "https://www.linkedin.com/in/riituv/"
   }
 };

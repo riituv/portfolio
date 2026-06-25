@@ -3,9 +3,9 @@
 import { motion } from "framer-motion";
 import * as LucideIcons from "lucide-react";
 import { Sparkles } from "lucide-react";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Card } from '@/components/ui/card'
 import { skillsData } from "@/data/data";
+import { TechLogo } from "@/components/TechLogo";
 
 const MotionCard = motion.create(Card);
 
@@ -32,6 +32,36 @@ const itemVariants = {
     },
   },
 } as const;
+
+const categoryThemes: Record<
+  string,
+  {
+    borderClass: string
+    checkClass: string
+  }
+> = {
+  Languages: {
+    borderClass: 'border-t-[3px] border-t-indigo-500',
+    checkClass: 'text-indigo-500 dark:text-indigo-400',
+  },
+  'Frontend Development': {
+    borderClass: 'border-t-[3px] border-t-cyan-500',
+    checkClass: 'text-cyan-500 dark:text-cyan-400',
+  },
+  'Backend & Systems': {
+    borderClass: 'border-t-[3px] border-t-emerald-500',
+    checkClass: 'text-emerald-500 dark:text-emerald-400',
+  },
+  'Tools & DevOps': {
+    borderClass: 'border-t-[3px] border-t-amber-500',
+    checkClass: 'text-amber-500 dark:text-amber-400',
+  },
+}
+
+const defaultTheme = {
+  borderClass: 'border-t-[3px] border-t-indigo-500',
+  checkClass: 'text-indigo-500 dark:text-indigo-400',
+}
 
 export default function Skills() {
   return (
@@ -68,36 +98,45 @@ export default function Skills() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {skillsData.categories.map((cat) => {
               const IconComponent = (LucideIcons as unknown as Record<string, React.ComponentType<{ className?: string }>>)[cat.iconName] || LucideIcons.HelpCircle;
+              const theme = categoryThemes[cat.title] || defaultTheme
 
               return (
                 <MotionCard
                   key={cat.title}
                   variants={itemVariants}
-                  whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                  className="bg-card/30 backdrop-blur-sm hover:border-indigo-500/30 hover:bg-card/50 transition-colors duration-300 flex flex-col h-full border-border/80 p-6"
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, margin: "-100px" }}
+                  whileHover={{ y: -6, transition: { duration: 0.2 } }}
+                  className={`bg-card/30 backdrop-blur-sm border border-border/80 hover:border-indigo-500/30 hover:bg-card/50 transition-all duration-300 flex flex-col h-full rounded-2xl p-6 shadow-lg ${theme.borderClass}`}
                 >
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="p-2 rounded-lg bg-muted border border-border/40">
+                  {/* Category Header */}
+                  <div className="flex items-center gap-3">
+                    <div className="p-2.5 rounded-xl bg-muted border border-border/40 flex-shrink-0">
                       <IconComponent className={`size-5 ${cat.iconColorClass}`} />
                     </div>
-                    <h4 className="font-semibold text-foreground text-sm tracking-wide uppercase">
+                    <h4 className="font-bold text-foreground text-xs uppercase tracking-wider">
                       {cat.title}
                     </h4>
                   </div>
-                  
-                  <div className="flex flex-wrap gap-2 mt-auto">
+
+                  {/* Divider */}
+                  <div className="h-[1px] w-full bg-border/45 my-4" />
+
+                  {/* Skills List (Perfectly Aligned) */}
+                  <ul className="space-y-3.5 flex-grow flex flex-col justify-start">
                     {cat.skills.map((skill) => (
-                      <Badge
+                      <li
                         key={skill}
-                        variant="secondary"
-                        className="bg-muted/60 text-muted-foreground border border-border/50 hover:border-indigo-500/20 hover:text-foreground hover:bg-muted transition-colors duration-200 cursor-default"
+                        className="flex items-center gap-2.5 text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 cursor-default"
                       >
-                        {skill}
-                      </Badge>
+                        <TechLogo name={skill} className="size-4 flex-shrink-0" />
+                        <span className="font-medium">{skill}</span>
+                      </li>
                     ))}
-                  </div>
+                  </ul>
                 </MotionCard>
-              );
+              )
             })}
           </div>
         </motion.div>

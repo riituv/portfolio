@@ -5,13 +5,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Mail,
   MapPin,
-  Clock,
   Sparkles,
   Send,
   CheckCircle,
   AlertCircle,
-  ArrowRight
-} from "lucide-react";
+  ArrowRight,
+  Copy,
+  Check,
+} from 'lucide-react'
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -57,6 +58,17 @@ export default function Contact() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [submissionError, setSubmissionError] = useState("");
+  const [isCopied, setIsCopied] = useState(false)
+
+  const handleCopyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(contactData.details.email)
+      setIsCopied(true)
+      setTimeout(() => setIsCopied(false), 2000)
+    } catch (err) {
+      console.error('Failed to copy email:', err)
+    }
+  }
 
   const validate = () => {
     const newErrors = { name: "", email: "", message: "" };
@@ -144,7 +156,7 @@ export default function Contact() {
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={{ once: true, margin: '-100px' }}
           className="space-y-16"
         >
           {/* Header */}
@@ -166,7 +178,10 @@ export default function Contact() {
           {/* Contact Layout Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 lg:items-stretch items-start">
             {/* Left: Contact Info Info-blocks */}
-            <motion.div variants={itemVariants} className="lg:col-span-5 flex flex-col justify-between h-full gap-8">
+            <motion.div
+              variants={itemVariants}
+              className="lg:col-span-5 flex flex-col justify-between h-full gap-8"
+            >
               <div className="space-y-4">
                 <h3 className="font-[family-name:var(--font-playfair-display)] font-bold text-2xl md:text-3xl text-foreground">
                   {contactData.infoTitle}
@@ -177,32 +192,46 @@ export default function Contact() {
               </div>
 
               {/* Info Blocks */}
-              <div className="flex flex-col justify-between gap-4 flex-grow">
-                {/* Email card */}
-                <div className="p-5 rounded-2xl border border-border bg-card/30 backdrop-blur-sm flex items-start gap-4 hover:border-indigo-500/20 hover:bg-card/50 transition-all duration-300">
-                  <div className="p-3 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-500">
+              <div className="flex flex-col justify-start gap-8 flex-grow py-4">
+                {/* Email item */}
+                <div className="flex items-start gap-4 group">
+                  <div className="text-indigo-500 flex-shrink-0 mt-1">
                     <Mail className="size-6" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-foreground text-sm uppercase tracking-wider text-muted-foreground">
+                    <h4 className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">
                       Email Me Directly
                     </h4>
-                    <a
-                      href={`mailto:${contactData.details.email}`}
-                      className="text-foreground font-semibold hover:text-indigo-500 transition-colors duration-200 block mt-1"
-                    >
-                      {contactData.details.email}
-                    </a>
+                    <div className="flex items-center gap-2 mt-1">
+                      <a
+                        href={`mailto:${contactData.details.email}`}
+                        className="text-foreground font-semibold hover:text-indigo-500 transition-colors duration-200"
+                      >
+                        {contactData.details.email}
+                      </a>
+                      <button
+                        type="button"
+                        onClick={handleCopyEmail}
+                        className="p-1 rounded-md hover:bg-muted text-muted-foreground hover:text-indigo-500 transition-all duration-200 opacity-0 group-hover:opacity-100 focus:opacity-100"
+                        title="Copy email address"
+                      >
+                        {isCopied ? (
+                          <Check className="size-4 text-emerald-500" />
+                        ) : (
+                          <Copy className="size-4" />
+                        )}
+                      </button>
+                    </div>
                   </div>
                 </div>
 
-                {/* Location card */}
-                <div className="p-5 rounded-2xl border border-border bg-card/30 backdrop-blur-sm flex items-start gap-4 hover:border-indigo-500/20 hover:bg-card/50 transition-all duration-300">
-                  <div className="p-3 rounded-xl bg-teal-500/10 border border-teal-500/20 text-teal-500">
+                {/* Location item */}
+                <div className="flex items-start gap-4">
+                  <div className="text-teal-500 flex-shrink-0 mt-1">
                     <MapPin className="size-6" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-foreground text-sm uppercase tracking-wider text-muted-foreground">
+                    <h4 className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">
                       Location
                     </h4>
                     <p className="text-foreground font-semibold mt-1">
@@ -211,19 +240,37 @@ export default function Contact() {
                   </div>
                 </div>
 
-                {/* Response time card */}
-                {contactData.details.responseTime && (
-                  <div className="p-5 rounded-2xl border border-border bg-card/30 backdrop-blur-sm flex items-start gap-4 hover:border-indigo-500/20 hover:bg-card/50 transition-all duration-300">
-                    <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-500">
-                      <Clock className="size-6" />
+                {/* LinkedIn item */}
+                {contactData.details.linkedin && (
+                  <div className="flex items-start gap-4">
+                    <div className="text-blue-600 dark:text-blue-400 flex-shrink-0 mt-1">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="size-6"
+                      >
+                        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+                        <rect x="2" y="9" width="4" height="12" />
+                        <circle cx="4" cy="4" r="2" />
+                      </svg>
                     </div>
                     <div>
-                      <h4 className="font-semibold text-foreground text-sm uppercase tracking-wider text-muted-foreground">
-                        Response Time
+                      <h4 className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">
+                        LinkedIn
                       </h4>
-                      <p className="text-foreground font-semibold mt-1">
-                        {contactData.details.responseTime}
-                      </p>
+                      <a
+                        href={contactData.details.linkedin}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-foreground font-semibold hover:text-indigo-500 transition-colors duration-200 block mt-1"
+                      >
+                        Want to chat?
+                      </a>
                     </div>
                   </div>
                 )}
@@ -261,7 +308,7 @@ export default function Contact() {
                           name="name"
                           value={formData.name}
                           onChange={handleInputChange}
-                          placeholder="Ritu Vyas"
+                          placeholder="John Doe"
                           aria-invalid={!!errors.name}
                           className="h-11 px-4 py-3 rounded-xl bg-background/50"
                         />
@@ -287,7 +334,7 @@ export default function Contact() {
                           name="email"
                           value={formData.email}
                           onChange={handleInputChange}
-                          placeholder={contactData.details.email}
+                          placeholder="johndoe@example.com"
                           aria-invalid={!!errors.email}
                           className="h-11 px-4 py-3 rounded-xl bg-background/50"
                         />
@@ -359,19 +406,22 @@ export default function Contact() {
                       initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.95 }}
-                      transition={{ type: "spring", stiffness: 80, damping: 14 }}
+                      transition={{ type: 'spring', stiffness: 80, damping: 14 }}
                       className="text-center py-10 space-y-6 relative z-10 flex-grow flex flex-col items-center justify-center h-full"
                     >
                       <div className="p-4 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 animate-bounce">
                         <CheckCircle className="size-12" />
                       </div>
-                      
+
                       <div className="space-y-2">
                         <h3 className="font-[family-name:var(--font-playfair-display)] font-bold text-3xl text-foreground">
                           Thank you, {formData.name}!
                         </h3>
                         <p className="text-muted-foreground max-w-sm mx-auto text-sm md:text-base leading-relaxed">
-                          Your message has been sent successfully. I have received it and will get back to you at <span className="text-foreground font-semibold">{formData.email}</span> shortly.
+                          Your message has been sent successfully. I have received it and will get
+                          back to you at{' '}
+                          <span className="text-foreground font-semibold">{formData.email}</span>{' '}
+                          shortly.
                         </p>
                       </div>
 
@@ -392,5 +442,5 @@ export default function Contact() {
         </motion.div>
       </div>
     </section>
-  );
+  )
 }
